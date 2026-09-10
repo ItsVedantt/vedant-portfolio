@@ -1,0 +1,302 @@
+---
+import { portfolio } from "../data/config.js";
+import "../styles/global.css";
+
+const imagePath = (path) => `${import.meta.env.BASE_URL}/${path.replace(/^\/+/, "")}`;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Vedant Nasare — Cybersecurity Portfolio" />
+  <title>VN// VEDANT NASARE — CYBERSECURITY</title>
+</head>
+<body>
+  <div id="boot">
+    <div class="boot-logo">VN//</div>
+    <div class="boot-track"><span></span></div>
+    <div class="boot-copy">INITIALIZING PLAYER PROFILE <b id="bootPct">0%</b></div>
+  </div>
+
+  <div class="app">
+    <div class="bg-grid"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <header class="topbar">
+      <div class="identity">
+        <strong>VN//</strong>
+        <span><b>VEDANT NASARE</b><small>PLAYER PROFILE</small></span>
+      </div>
+      <div class="system-clock">
+        <small>LOCAL TIME</small>
+        <b id="clock">00:00:00</b>
+        <i>IST</i>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <div class="nav-title">MENU <span>09</span></div>
+      <nav>
+        {portfolio.screens.map((s, i) => (
+          <button class:list={["nav-item", i === 0 && "active"]} data-nav={i}>
+            <span class="nav-icon">{["⌂","●","◇","▣","▤","★","◈","➤","◉"][i]}</span>
+            <span>{s.num}</span>
+            <b>{s.label}</b>
+          </button>
+        ))}
+      </nav>
+      <div class="sidebar-quote">
+        <span>"DISCIPLINE<br/>TODAY<br/>A SAFER<br/>TOMORROW"</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      {portfolio.screens.map((s, i) => (
+        <section
+          class:list={["screen", i === 0 && "active"]}
+          data-screen={i}
+          style={`--accent:${s.accent}`}
+        >
+          <div class="screen-bg" style={`background-image:url("${imagePath(s.image)}")`}></div>
+          <div class="screen-overlay"></div>
+
+          <div class="content">
+            <div class="eyebrow">{s.eyebrow} <span>// {s.num}</span></div>
+            <h1>{s.title}</h1>
+            {s.id === "home" && <div class="hero-name">VEDANT<br/>NASARE</div>}
+            <div class="role">{portfolio.role}<br/>{portfolio.subtitle}</div>
+            <div class="accent-line"></div>
+            <p>{s.description}</p>
+
+            {s.tags && (
+              <div class="tags">
+                {s.tags.map(t => <span>{t}</span>)}
+              </div>
+            )}
+
+            {s.facts && (
+              <div class="facts">
+                {s.facts.map(f => <div><small>{f[0]}</small><b>{f[1]}</b><span>{f[2]}</span></div>)}
+              </div>
+            )}
+
+            {s.projects && (
+              <div class="project-list">
+                {s.projects.map(p => <article><small>{p[0]} / {p[3]}</small><b>{p[1]}</b><span>{p[2]}</span></article>)}
+              </div>
+            )}
+
+            {s.timeline && (
+              <div class="timeline">
+                {s.timeline.map(t => <article><b>{t[0]}</b><div><strong>{t[1]}</strong><span>{t[2]}</span></div></article>)}
+              </div>
+            )}
+
+            {s.achievements && (
+              <div class="achievement-list">
+                {s.achievements.map(a => <article><b>{a[0]}</b><div><strong>{a[1]}</strong><span>{a[2]}</span></div></article>)}
+              </div>
+            )}
+
+            {s.focus && (
+              <div class="focus-list">
+                {s.focus.map((f, j) => <div><b>0{j+1}</b><span>{f}</span><i>↗</i></div>)}
+              </div>
+            )}
+
+            {s.contacts && (
+              <div class="contact-list">
+                {s.contacts.map(c => (
+                  <a href={c[2] || "#"} target={c[2]?.startsWith("http") ? "_blank" : undefined} rel="noreferrer" onClick={(e) => !c[2] && e.preventDefault()}>
+                    <small>{c[0]}</small><span>{c[1]}</span><b>↗</b>
+                  </a>
+                ))}
+              </div>
+            )}
+
+            <div class="actions">
+              <button class="primary" data-action={i}><span>{s.cta}</span><b>▶</b></button>
+            </div>
+          </div>
+
+          <div class="portrait-frame">
+            <div class="portrait-image" style={`background-image:url("${imagePath(s.image)}")`}></div>
+            <div class="portrait-copy">
+              <strong>{s.id === "home" ? "PLAYER ONE" : s.title}</strong>
+              <span>{portfolio.subtitle}</span>
+              <span>{portfolio.location}</span>
+            </div>
+            <div class="frame-code">{s.num}</div>
+          </div>
+        </section>
+      ))}
+    </main>
+
+    <aside class="right-hud">
+      <div class="hud-box">
+        <small>STATUS</small>
+        <strong><i></i> ONLINE</strong>
+        <div class="level"><span>LEVEL <b>01</b></span><span id="hudProgress">0 / 9</span></div>
+        <div class="level-bar"><i id="hudBar"></i></div>
+      </div>
+
+      <div class="hud-box minimap">
+        <div class="hud-heading">MINI MAP <span>N</span></div>
+        <div class="map">
+          <div class="map-roads"></div>
+          {portfolio.screens.map((_, i) => <button data-map={i} style={`--x:${18 + ((i * 29) % 68)}%;--y:${20 + ((i * 41) % 65)}%`}><i></i></button>)}
+          <div class="map-player" id="mapPlayer"></div>
+        </div>
+      </div>
+
+      <div class="hud-box mission-box">
+        <small>CURRENT MISSION</small>
+        <strong id="missionTitle">EXPLORE MY PORTFOLIO</strong>
+        <span>Navigate through sections<br/>to know more about me.</span>
+      </div>
+    </aside>
+
+    <footer class="bottom-hud">
+      <div class="now-playing">
+        <div class="disc">●</div>
+        <div><small>NOW PLAYING</small><b>Better Version — Loading...</b><span><i></i></span></div>
+        <em>0:00 / 3:12</em>
+      </div>
+      <div class="continue-text">Keep Going <i></i></div>
+      <div class="reputation"><span>★★★★★</span><small>REPUTATION</small></div>
+    </footer>
+
+    <div class="toast" id="toast"><b>MISSION PASSED</b><span id="toastText">New section unlocked</span></div>
+
+    <div class="pause" id="pause">
+      <div class="pause-card">
+        <small>VN// SYSTEM</small>
+        <h2>GAME PAUSED</h2>
+        <p>Your portfolio is waiting.</p>
+        <button id="resume" class="primary">RESUME <b>▶</b></button>
+      </div>
+    </div>
+
+    <div class="keyboard-help"><kbd>←</kbd><kbd>→</kbd> NAVIGATE <kbd>ENTER</kbd> SELECT <kbd>ESC</kbd> PAUSE</div>
+  </div>
+
+  <script is:inline>
+    (() => {
+      // Loader is deliberately independent from the navigation code.
+      const boot = document.getElementById("boot");
+      const bar = boot.querySelector(".boot-track span");
+      const pct = document.getElementById("bootPct");
+      let progress = 0;
+      const loader = setInterval(() => {
+        progress = Math.min(100, progress + 10);
+        bar.style.width = progress + "%";
+        pct.textContent = progress + "%";
+        if (progress === 100) {
+          clearInterval(loader);
+          setTimeout(() => boot.classList.add("done"), 250);
+          setTimeout(() => boot.remove(), 850);
+        }
+      }, 75);
+    })();
+  </script>
+
+  <script is:inline>
+    (() => {
+      const screens = [...document.querySelectorAll(".screen")];
+      const nav = [...document.querySelectorAll("[data-nav]")];
+      const maps = [...document.querySelectorAll("[data-map]")];
+      const progress = document.getElementById("hudProgress");
+      const bar = document.getElementById("hudBar");
+      const mission = document.getElementById("missionTitle");
+      const toast = document.getElementById("toast");
+      const toastText = document.getElementById("toastText");
+      const pause = document.getElementById("pause");
+      const resume = document.getElementById("resume");
+      let current = Number(localStorage.getItem("vn-screen") || 0);
+
+      if (!Number.isInteger(current) || current < 0 || current >= screens.length) current = 0;
+
+      const missionNames = [
+        "EXPLORE MY PORTFOLIO", "VIEW PLAYER PROFILE", "OPEN CYBER LOADOUT",
+        "SELECT A MISSION", "OPEN FIELD LOG", "VIEW UNLOCKED BADGES",
+        "ACCEPT A SIDE QUEST", "SEND A SIGNAL", "RESTART MISSION"
+      ];
+
+      function render(index, direction = 1, announce = false) {
+        if (index < 0 || index >= screens.length) return;
+        const old = current;
+        current = index;
+
+        screens.forEach((s, i) => {
+          s.classList.toggle("active", i === current);
+          s.classList.remove("from-left", "from-right");
+          if (i === current && old !== current) s.classList.add(direction > 0 ? "from-right" : "from-left");
+        });
+
+        nav.forEach((n, i) => n.classList.toggle("active", i === current));
+        maps.forEach((m, i) => m.classList.toggle("active", i === current));
+
+        const pct = ((current + 1) / screens.length) * 100;
+        progress.textContent = `${current + 1} / ${screens.length}`;
+        bar.style.width = pct + "%";
+        mission.textContent = missionNames[current];
+        document.documentElement.style.setProperty("--active-accent", screens[current].style.getPropertyValue("--accent"));
+
+        localStorage.setItem("vn-screen", current);
+
+        if (announce && old !== current) {
+          toastText.textContent = `Section ${String(current + 1).padStart(2,"0")} unlocked`;
+          toast.classList.add("show");
+          clearTimeout(window.__toastTimer);
+          window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+        }
+      }
+
+      nav.forEach((button, i) => button.addEventListener("click", () => render(i, i > current ? 1 : -1, true)));
+      maps.forEach((button, i) => button.addEventListener("click", () => render(i, i > current ? 1 : -1, true)));
+
+      document.querySelectorAll("[data-action]").forEach(button => {
+        button.addEventListener("click", () => {
+          const i = Number(button.dataset.action);
+          if (i === screens.length - 1) render(0, -1, true);
+          else render(Math.min(i + 1, screens.length - 1), 1, true);
+        });
+      });
+
+      resume.addEventListener("click", () => pause.classList.remove("show"));
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+          e.preventDefault();
+          render((current + 1) % screens.length, 1, true);
+        }
+        if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+          e.preventDefault();
+          render((current - 1 + screens.length) % screens.length, -1, true);
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          document.querySelector(`[data-action="${current}"]`)?.click();
+        }
+        if (e.key === "Escape") {
+          e.preventDefault();
+          pause.classList.toggle("show");
+        }
+      });
+
+      function clock() {
+        document.getElementById("clock").textContent = new Intl.DateTimeFormat([], {
+          hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+        }).format(new Date());
+      }
+      clock();
+      setInterval(clock, 1000);
+
+      render(current);
+    })();
+  </script>
+</body>
+</html>
